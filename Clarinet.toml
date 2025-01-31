@@ -8,6 +8,10 @@ requirements = []
 path = "contracts/nano-marketplace.clar"
 depends_on = []
 
+[contracts.nano-nft]
+path = "contracts/nano-nft.clar"
+depends_on = []
+
 [contracts.nano-token]
 path = "contracts/nano-token.clar"
 depends_on = []
