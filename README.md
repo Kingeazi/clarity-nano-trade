@@ -10,8 +10,16 @@ NanoTrade enables creators of nano-tech innovations to list and sell their intel
 
 ## Contract Architecture
 - `nano-marketplace.clar`: Main marketplace contract
+  - Supports listing creation, purchases, and cancellations
+  - Includes read-only function for querying listing details
+  - Enhanced error handling for listing status
 - `nano-token.clar`: SIP010-compliant token for transactions
 - `nano-nft.clar`: NFT contract for ownership certificates
 
 ## Usage
 [Documentation on how to use the contracts...]
+
+### Recent Enhancements
+- Added read-only function `get-listing` to query listing details
+- Improved error handling for listing status validation
+- Enhanced test coverage for marketplace functionality
