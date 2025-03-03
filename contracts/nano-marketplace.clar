@@ -8,6 +8,8 @@
 (define-constant err-listing-expired (err u103))
 (define-constant err-invalid-status (err u104))
 (define-constant err-contract-paused (err u105))
+(define-constant err-invalid-price (err u106))
+(define-constant err-invalid-description (err u107))
 
 ;; Data variables
 (define-data-var contract-paused bool false)
@@ -33,6 +35,10 @@
 
 (define-map-event listing-purchased 
   ((listing-id uint) (buyer principal) (price uint))
+)
+
+(define-map-event listing-cancelled
+  ((listing-id uint) (seller principal))
 )
 
 ;; Admin functions
@@ -64,7 +70,9 @@
   (let 
     ((listing-id (var-get listing-counter)))
     (asserts! (not (var-get contract-paused)) err-contract-paused)
+    (asserts! (> price u0) err-invalid-price)
     (asserts! (> expiry block-height) err-invalid-listing)
+    (asserts! (> (len description) u0) err-invalid-description)
     (begin
       (map-set listings
         {listing-id: listing-id}
@@ -105,11 +113,13 @@
   (let ((listing (unwrap! (get-listing listing-id) err-invalid-listing)))
     (asserts! (not (var-get contract-paused)) err-contract-paused)
     (asserts! (is-eq tx-sender (get seller listing)) err-not-owner)
+    (asserts! (is-eq (get status listing) "active") err-invalid-status)
     (begin
       (map-set listings
         {listing-id: listing-id}
         (merge listing {status: "cancelled"})
       )
+      (emit-listing-cancelled listing-id tx-sender)
       (ok true)
     )
   )
